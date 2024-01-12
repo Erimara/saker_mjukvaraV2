@@ -13,3 +13,5 @@ serde = { version = "1", features = ["derive"] }
 serde_derive = "1"
 futures-util = "0.3"
 actix-cors = "0.7.0"
+http = "0.2.11"
+bcrypt = "0.15.0"

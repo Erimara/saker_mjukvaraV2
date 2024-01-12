@@ -1,7 +1,8 @@
 use actix_web::{web, HttpResponse};
+use bcrypt::{DEFAULT_COST, hash};
 use mongodb::{Database};
 use crate::user;
-//use crate::user_post;
+
 use crate::user_post::Post;
 use futures_util::stream::TryStreamExt;
 use crate::user::User;
@@ -24,18 +25,31 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
 }
 
 async fn register(data: web::Data<Database>, user: web::Json<user::User>) -> HttpResponse {
+    println!("called");
     let db = data.get_ref();
     let collection = db.collection::<User>("users");
-    let post_a_user = user.0;
-    match collection.insert_one(post_a_user, None).await{
+
+    let hashed_password= match hash(&user.password, DEFAULT_COST) {
+        Ok(h) => h,
+        Err(e) => {
+            println!("Failed to hash password: {:?}", e);
+            return HttpResponse::InternalServerError().finish();
+        }
+    };
+
+    let user_with_hash = User{
+        email: user.email.clone(),
+        password: hashed_password,
+    };
+
+    match collection.insert_one(user_with_hash, None).await{
         Ok(result) => {
             println!("Created user with id: {:?}", result.inserted_id);
-            ();
             HttpResponse::Ok().json(result);
         }
         Err(e) => {
             println!("Failed to create user: {:?}", e);
-            ();
+            HttpResponse::InternalServerError().finish();
         }
     }
     HttpResponse::Ok().finish()
