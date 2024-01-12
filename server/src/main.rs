@@ -10,7 +10,7 @@ mod hash;
 #[actix_web::main]
 async fn main() {
     let bind_address = "127.0.0.1:8080";
-    let database_url = "mongodb+srv://erimara:7bV1clu3hzGkgbfH@testarea.fh4xycy.mongodb.net/";
+    let database_url = "hidden";
 
 
     let database = db::connection(database_url).await;
