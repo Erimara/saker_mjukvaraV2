@@ -16,7 +16,7 @@ async fn main() {
     let app = move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
-            .wrap(Cors::default().allowed_origin("hidden"))
+            .wrap(Cors::default().allowed_origin("http://localhost:63342"))
             /*   .allowed_methods(vec!["GET", "POST"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
             .allowed_header(http::header::CONTENT_TYPE)
