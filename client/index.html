@@ -2,28 +2,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header><h1>NotFacebook</h1></header>
 
-<aside>
-    <h3>Register</h3>
-    Login
-    <button>Sign in</button>
-</aside>
+
 <h3>Register</h3>
 <form method="post">
     <input name="email" type="email" placeholder="email">
-    <input name="password" type="password" placeholder="password" value="">
+    <input name="password" type="password" placeholder="password">
     <button id="sign-up">Sign up</button>
 </form>
 
+<aside>
+    <h3>Login</h3>
+    <form method="post">
+        <input id="#login-email" name="email" type="email" placeholder="email">
+        <input id="#login-pass" name="password" type="password" placeholder="password">
+        <button id="sign-in">Sign in</button>
+    </form>
+</aside>
+
 <h3>Posts</h3>
+<i>Post something</i>
+<form method="post">
+    <input id="title" name="title" type="text" placeholder="write a cool title">
+    <textarea id="content"></textarea>
+    <button id="post-content">Post</button>
+</form>
+
+
+<input type="text" id="search" placeholder="Search">
+<article>
+    <ul id="search-list"></ul>
+</article>
+
+
 <article>
     <ul id="postsList"></ul>
 </article>
-
-<input type="hidden">
 
 <script src="main.js" type="module"></script>
 </body>

@@ -1,36 +1,38 @@
-use actix_web::{web, App, HttpServer};
 use actix_cors::Cors;
-
+use actix_session::SessionMiddleware;
+use actix_session::storage::CookieSessionStore;
+use actix_web::{web, App, HttpServer};
+use actix_web::cookie::{Key};
+use actix_web::http::header;
 mod routes;
 mod db;
-mod user;
-mod user_post;
-mod hash;
+mod models;
+mod http_methods;
+mod login;
 
 #[actix_web::main]
 async fn main() {
-    let bind_address = "127.0.0.1:8080";
+    let address = "127.0.0.1:8080";
     let database_url = "hidden";
-
-
     let database = db::connection(database_url).await;
-    let app = move || {
+    let secret = Key::generate();
+    HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
-            .configure(routes::configure_routes)
+
             .wrap(
                 Cors::default()
                     .allowed_origin("http://localhost:63342")
                     .allowed_methods(vec!["GET","POST"])
-                    .allowed_header(http::header::CONTENT_TYPE)
+                    .allowed_header(header::CONTENT_TYPE)
                     .max_age(3600)
             )
-
-    };
-
-
-    HttpServer::new(app)
-        .bind(bind_address).expect("Failed to bind")
+            .wrap(
+              SessionMiddleware::new(CookieSessionStore::default(), secret.clone())
+            )
+            .configure(routes::configure_routes)
+    })
+        .bind(address).expect("Failed to bind")
         .run()
         .await
         .expect("Failed to run server");

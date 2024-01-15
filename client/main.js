@@ -1,47 +1,35 @@
-async function getAllPosts() {
-    const response = await fetch("http://127.0.0.1:8080/posts");
-    return await response.json();
-}
+import {registerUser, login} from "./user.js"
+import {displayPosts, postContent, searchPosts} from "./posts.js";
 
-async function displayPosts() {
-    const posts = await getAllPosts();
-    const postsList = document.getElementById("postsList");
-
-    posts.forEach(post => {
-        const h4 = document.createElement("h4");
-        const p = document.createElement("p");
-        const b = document.createElement("b");
-        h4.textContent = post.title;
-        p.textContent = post.content;
-        b.textContent = post.date;
-        postsList.appendChild(h4);
-        postsList.appendChild(p);
-        postsList.appendChild(b);
-    });
-}
-
-async function registerUser(email, password) {
-    try {
-        const response = await fetch("http://127.0.0.1:8080/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        await response.json();
-
-    } catch (error) {
-        console.error("Error during registration:", error);
-    }
-}
+document.getElementById("sign-in").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("#login-email").value;
+    const password = document.getElementById("#login-pass").value;
+    await login(email,password);
+})
 document.getElementById("sign-up").addEventListener("click", async (e) => {
     e.preventDefault();
     const email = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
-
     await registerUser(email,password);
 })
+
+document.getElementById("post-content").addEventListener("click", async (e) =>{
+    e.preventDefault();
+    const date = getCurrentDate();
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    console.log(title + content);
+    await postContent(title,content,date)
+})
+
+document.getElementById("search").addEventListener("keyup", async (e) =>{
+    e.preventDefault();
+    searchPosts();
+})
+
+function getCurrentDate(){
+    return new Date().toISOString();
+}
 
 await displayPosts();
