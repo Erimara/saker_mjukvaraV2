@@ -16,3 +16,4 @@ actix-cors = "0.7.0"
 http = "1.0.0"
 bcrypt = "0.15.0"
 actix-session = { version = "0.9.0", features = ["cookie-session"]  }
+mime = "0.3.17"

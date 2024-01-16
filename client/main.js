@@ -1,4 +1,4 @@
-import {registerUser, login} from "./user.js"
+import {registerUser, login, logout} from "./user.js"
 import {displayPosts, postContent, searchPosts} from "./posts.js";
 
 document.getElementById("sign-in").addEventListener("click", async (e) => {
@@ -12,6 +12,10 @@ document.getElementById("sign-up").addEventListener("click", async (e) => {
     const email = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
     await registerUser(email,password);
+})
+document.getElementById("sign-out").addEventListener("click", async (e) => {
+    e.preventDefault();
+    await logout();
 })
 
 document.getElementById("post-content").addEventListener("click", async (e) =>{

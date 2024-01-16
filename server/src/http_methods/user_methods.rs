@@ -16,6 +16,7 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
     };
 
     let hashed_user = User{
+        id: None,
         email: user.email.clone(),
         password: hash_password,
     };
