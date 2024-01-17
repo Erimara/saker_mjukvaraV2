@@ -2,7 +2,6 @@ use actix_web::{HttpResponse, web};
 use bcrypt::{DEFAULT_COST, hash};
 use mongodb::Database;
 use crate::models::user::User;
-
 pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -> HttpResponse {
     let db = data.get_ref();
     let collection = db.collection::<User>("users");
@@ -19,6 +18,7 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
         id: None,
         email: user.email.clone(),
         password: hash_password,
+        role: None
     };
 
     return match collection.insert_one(hashed_user, None).await {

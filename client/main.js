@@ -1,5 +1,6 @@
 import {registerUser, login, logout} from "./user.js"
 import {displayPosts, postContent, searchPosts} from "./posts.js";
+// import {githubLogin} from "./oauth";
 
 document.getElementById("sign-in").addEventListener("click", async (e) => {
     e.preventDefault();
@@ -26,6 +27,11 @@ document.getElementById("post-content").addEventListener("click", async (e) =>{
     console.log(title + content);
     await postContent(title,content,date)
 })
+
+// document.getElementById("oauth").addEventListener("click", async (e) =>{
+//     e.preventDefault();
+//     await githubLogin()
+// })
 
 document.getElementById("search").addEventListener("keyup", async (e) =>{
     e.preventDefault();

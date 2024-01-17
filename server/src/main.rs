@@ -4,16 +4,17 @@ use actix_session::storage::CookieSessionStore;
 use actix_web::{web, App, HttpServer};
 use actix_web::cookie::{Key, SameSite};
 use actix_web::http::header;
-mod routes;
-mod db;
+use crate::database::db::connection;
+use crate::http_methods::routes;
 mod models;
 mod http_methods;
 mod login;
+mod database;
 #[actix_web::main]
 async fn main() {
-    let address = "127.0.0.1:8080";
-    let database_url = "hidden";
-    let database = db::connection(database_url).await;
+    let address = "127.0.0.1:8081";
+    let database = connection().await;
+
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
