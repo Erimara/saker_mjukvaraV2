@@ -1,6 +1,6 @@
 export async function registerUser(email, password) {
     try {
-        const response = await fetch("http://127.0.0.1:8080/register", {
+        const response = await fetch("http://127.0.0.1:8081/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +15,7 @@ export async function registerUser(email, password) {
 
 export async function login(email, password) {
     try {
-        const response = await fetch("http://127.0.0.1:8080/login", {
+        const response = await fetch("http://127.0.0.1:8081/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -31,7 +31,7 @@ export async function login(email, password) {
 }
 export async function logout() {
     try {
-        const response = await fetch("http://127.0.0.1:8080/logout", {
+        const response = await fetch("http://127.0.0.1:8081/logout", {
             method: "DELETE",
             credentials: 'include'
         });
