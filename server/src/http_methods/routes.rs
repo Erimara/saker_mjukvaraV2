@@ -29,6 +29,9 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
         web::resource("/logout")
             .route(web::delete().to(logout))
     );
+
+}
+pub fn configure_github_auth_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::resource("/oauth")
             .route(web::get().to(setup_oauth))

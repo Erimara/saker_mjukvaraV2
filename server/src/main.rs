@@ -13,28 +13,37 @@ mod database;
 #[actix_web::main]
 async fn main() {
     let address = "127.0.0.1:8081";
+    let oauth_address = "127.0.0.1:8082";
     let database = connection().await;
 
-    HttpServer::new(move || {
+    let main_server = HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
-
             .wrap(
                 Cors::default()
                     .allowed_origin("http://127.0.0.1:5500")
                     .allowed_methods(vec!["GET", "POST", "DELETE"])
                     .allowed_header(header::CONTENT_TYPE)
                     .max_age(3600)
-                    .supports_credentials()
+                    .supports_credentials(),
             )
             .wrap(session_middleware())
             .configure(routes::configure_routes)
     })
         .bind(address)
-        .expect("Failed to bind")
-        .run()
-        .await
-        .expect("Failed to run server");
+        .expect("Failed to bind main server")
+        .run();
+
+    let github_auth_server = HttpServer::new(move || {
+        App::new()
+            .wrap(session_middleware())
+            .configure(routes::configure_github_auth_routes)
+    })
+        .bind(oauth_address)
+        .expect("Failed to bind oauth")
+        .run();
+
+    tokio::try_join!(main_server, github_auth_server).expect("Failed to run servers");
 }
 fn session_middleware() -> SessionMiddleware<CookieSessionStore> {
     SessionMiddleware::builder(
