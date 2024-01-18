@@ -1,5 +1,5 @@
 async function getAllPosts() {
-    const response = await fetch("http://127.0.0.1:8080/posts");
+    const response = await fetch("http://127.0.0.1:8081/posts");
     return await response.json();
 }
 
@@ -25,7 +25,7 @@ export async function displayPosts() {
 
 export async function postContent(title, content, date){
     try {
-        const response = await fetch("http://127.0.0.1:8080/create_post", {
+        const response = await fetch("http://127.0.0.1:8081/create_post", {
             method:"POST",
             headers:{"Content-Type": "application/json"},
             body: JSON.stringify({title,content,date})
