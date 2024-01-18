@@ -1,5 +1,8 @@
+use std::str::FromStr;
 use actix_web::{HttpResponse, web};
 use futures_util::TryStreamExt;
+use mongodb::bson::{Bson, doc};
+use mongodb::bson::oid::ObjectId;
 use mongodb::Database;
 use crate::models::user_post::Post;
 
@@ -34,6 +37,29 @@ pub(crate) async fn get_all_posts(data: web::Data<Database>) -> HttpResponse {
         }
         Err(e) => {
             println!("Failed to get posts: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
+
+pub async fn delete_post(data: web::Data<Database>, post_id: web::Path<String>) -> HttpResponse {
+    println!("Received delete request for post_id: {}", post_id);
+    let db = data.get_ref();
+    let collection = db.collection::<Post>("posts");
+
+    let post_id_bson = Bson::ObjectId(ObjectId::from_str(&post_id).unwrap());
+    let filter = doc! {"_id": post_id_bson};
+    match collection.find_one_and_delete(filter, None).await {
+        Ok(Some(deleted_post)) => {
+            println!("Deleted post with id: {:?}", deleted_post.id);
+            HttpResponse::Ok().json(deleted_post)
+        }
+        Ok(None) => {
+            println!("Document not found for deletion");
+            HttpResponse::NotFound().finish()
+        }
+        Err(e) => {
+            println!("Error deleting post: {:?}", e);
             HttpResponse::InternalServerError().finish()
         }
     }

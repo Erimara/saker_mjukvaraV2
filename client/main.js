@@ -28,10 +28,6 @@ document.getElementById("post-content").addEventListener("click", async (e) =>{
     await postContent(title,content,date)
 })
 
-// document.getElementById("oauth").addEventListener("click", async (e) =>{
-//     e.preventDefault();
-//     await githubLogin()
-// })
 
 document.getElementById("search").addEventListener("keyup", async (e) =>{
     e.preventDefault();

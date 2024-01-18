@@ -1,5 +1,5 @@
 use actix_web::{web};
-use crate::http_methods::post_methods::create_post;
+use crate::http_methods::post_methods::{create_post, delete_post};
 use crate::http_methods::post_methods::get_all_posts;
 use crate::http_methods::user_methods::register;
 use crate::login::form_login::form_login;
@@ -15,6 +15,10 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
             .route(web::post().to(create_post))
     );
     cfg.service(
+        web::resource("/delete_post/{post_id}")
+            .route(web::delete().to(delete_post))
+    );
+    cfg.service(
         web::resource("/posts")
             .route(web::get().to(get_all_posts))
     );
@@ -26,5 +30,6 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
         web::resource("/logout")
             .route(web::delete().to(logout))
     );
+
 
 }

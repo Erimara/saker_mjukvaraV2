@@ -7,5 +7,6 @@ pub struct User {
     pub id: Option<ObjectId>,
     pub email: String,
     pub password: String,
-    pub role: Option<String>,
+    #[serde(default)]
+    pub admin: bool,
 }

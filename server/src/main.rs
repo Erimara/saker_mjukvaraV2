@@ -10,6 +10,7 @@ mod models;
 mod http_methods;
 mod login;
 mod database;
+
 #[actix_web::main]
 async fn main() {
     let address = "127.0.0.1:8081";

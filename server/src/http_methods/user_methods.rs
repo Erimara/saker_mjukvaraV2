@@ -18,7 +18,7 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
         id: None,
         email: user.email.clone(),
         password: hash_password,
-        role: None
+        admin:false
     };
 
     return match collection.insert_one(hashed_user, None).await {

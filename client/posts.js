@@ -8,20 +8,31 @@ export async function displayPosts() {
     const postsList = document.getElementById("postsList");
 
     posts.forEach(post => {
+        console.log(post._id);
         const anchor = document.createElement("a");
         anchor.setAttribute("href", "#")
         const h4 = document.createElement("h4");
         const p = document.createElement("p");
         const b = document.createElement("b");
+        const button = document.createElement("button");
+        button.setAttribute("class", "delete-post");
         h4.textContent = post.title;
         p.textContent = post.content;
         b.textContent = post.date;
+        button.textContent = "delete"
         anchor.appendChild(h4)
         postsList.appendChild(anchor);
         postsList.appendChild(p);
         postsList.appendChild(b);
+        postsList.appendChild(button);
+
+           button.addEventListener("click", () => {
+             deletePost(post._id);
+           });
+
     });
 }
+
 
 export async function postContent(title, content, date){
     try {
@@ -34,6 +45,29 @@ export async function postContent(title, content, date){
     } catch (error){
         console.log("Error at posting content", error)
     }
+}
+
+ async function deletePost(post_id) {
+    const objectId = post_id.$oid;
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8081/delete_post/${objectId}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        // No need to include a request body for a DELETE request
+      }
+    );
+
+    if (response.ok) {
+      // Optionally handle success or update UI
+      console.log(`Post with ID ${post_id} deleted successfully`);
+    } else {
+      console.error(`Failed to delete post with ID ${post_id}`);
+    }
+  } catch (error) {
+    console.error("Error at deleting post:", error);
+  }
 }
 
 export function searchPosts(){
