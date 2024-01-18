@@ -41,6 +41,20 @@ pub(crate) async fn get_all_posts(data: web::Data<Database>) -> HttpResponse {
         }
     }
 }
+pub(crate) async fn get_post_by_id(data: web::Data<Database>, post_id:web::Path<String>) -> HttpResponse {
+    let db = data.get_ref();
+    let collection = db.collection::<Post>("posts");
+    let post_id_bson = doc!{"_id":Bson::ObjectId(ObjectId::from_str(&post_id).unwrap())};
+    match collection.find_one(post_id_bson, None).await {
+        Ok(post) => {
+            HttpResponse::Ok().json(post)
+        }
+        Err(e) => {
+            println!("Failed to get posts: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
 
 pub async fn delete_post(data: web::Data<Database>, post_id: web::Path<String>) -> HttpResponse {
     println!("Received delete request for post_id: {}", post_id);
