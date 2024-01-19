@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate serde_derive;
 use actix_session::{Session, SessionMiddleware};
-use actix_web::http::header;
 use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_session::storage::CookieSessionStore;
 use oauth2::basic::BasicClient;
@@ -15,15 +14,15 @@ use actix_web::cookie::time::Duration;
 use actix_web::http::header::LOCATION;
 
 
+
 #[actix_web::main]
 async fn main() {
     HttpServer::new(|| {
-        let github_client_id = ClientId::new("x".to_string());
-        let github_client_secret = ClientSecret::new("x".to_string());
+        let github_client_id = ClientId::new("dcf20468267e4679698e".to_string());
+        let github_client_secret = ClientSecret::new("82537b527413bf5f99cf74281ba90b22f0055034".to_string());
         let auth_url = AuthUrl::new("https://github.com/login/oauth/authorize".to_string()).expect("failed to get github auth");
         let token_url = TokenUrl::new("https://github.com/login/oauth/access_token".to_string()).expect("failed to get github token");
 
-        // Set up the config for the Google OAuth2 process.
         let client = BasicClient::new(
             github_client_id,
             Some(github_client_secret),
@@ -45,7 +44,7 @@ async fn main() {
         .expect("Can not bind to port 8083")
         .run()
         .await
-        .unwrap();
+        .expect("Could not start oauth server");
 }
 
 fn cookie() -> SessionMiddleware<CookieSessionStore> {
@@ -102,10 +101,12 @@ async fn logout(session: Session) -> HttpResponse {
         .path("/")
         .expires(time::OffsetDateTime::now_utc())
         .finish();
-    HttpResponse::Found()
+    let html = html_redirect();
+    let response = HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
         .cookie(expired_cookie)
-        .header(LOCATION, "/".to_string())
-        .finish()
+        .body(html);
+    response
 }
 
 #[derive(Deserialize)]
@@ -125,35 +126,22 @@ async fn auth(
     let state = CsrfToken::new(params.state.clone());
     let _scope = params.scope.clone();
 
-    let token = &data.oauth.exchange_code(code);
-
+    data.oauth.exchange_code(code);
     session.insert("login", true).unwrap();
+
     let cookie_value = state.secret();
     let cookie = Cookie::build("oauth", cookie_value)
         .http_only(true)
         .max_age(Duration::new(3000, 0))
         .finish();
+    let html = html_redirect();
+    let response = HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .cookie(cookie)
+        .body(html);
 
-    let html = format!(
-        r#"<html>
-        <head><title>OAuth2 Test</title></head>
-        <body>
-            github returned the following state:
-            <p> {}</p>
-            github returned the following token:
-            <p>t{:?}</p>
-        </body>
-    </html>"#,
-        state.secret(),
-        token
-    );
-    HttpResponse::Ok().insert_header(header::ContentType(mime::APPLICATION_JSON))
-        .cookie(cookie).body(html);
-    HttpResponse::SeeOther()
-        .header(LOCATION, "http://127.0.0.1:5500")
-        .finish()
+    response
 }
-
 pub fn configure_github_auth_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::resource("/")
@@ -171,4 +159,22 @@ pub fn configure_github_auth_routes(cfg: &mut web::ServiceConfig) {
         web::resource("/auth")
             .route(web::get().to(auth))
     );
+}
+fn html_redirect() -> String {
+    let link = "127.0.0.1:5500";
+    let html = format!(
+        r#"
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="refresh" content="0;url=http://127.0.0.1:5500">
+            <title>Redirecting...</title>
+        </head>
+        <body>
+            <p>If you are not redirected,<a href="/{}"> Click here{}</a>
+        </body>
+        </html>
+    "#, link, link);
+    html
 }
