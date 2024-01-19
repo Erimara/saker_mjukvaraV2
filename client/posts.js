@@ -72,7 +72,7 @@ export async function displayPosts() {
     postContainer.appendChild(b);
     postContainer.appendChild(button);
 
-    postContainer.addEventListener("click", () => {
+    h4.addEventListener("click", () => {
       redirectToPostPage(post._id.$oid);
     });
 
@@ -94,8 +94,10 @@ export async function postContent(title, content, date){
         const response = await fetch("http://127.0.0.1:8081/create_post", {
             method:"POST",
             headers:{"Content-Type": "application/json"},
-            body: JSON.stringify({title,content,date})
+            body: JSON.stringify({title,content,date}),
+            credentials: 'include' //This might be unsafe :))
         });
+        
         await response.json();
     } catch (error){
         console.log("Error at posting content", error)
@@ -110,6 +112,7 @@ export async function postContent(title, content, date){
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", //This might be unsafe :))
       }
     );
 
