@@ -18,8 +18,8 @@ use actix_web::http::header::LOCATION;
 #[actix_web::main]
 async fn main() {
     HttpServer::new(|| {
-        let github_client_id = ClientId::new("dcf20468267e4679698e".to_string());
-        let github_client_secret = ClientSecret::new("82537b527413bf5f99cf74281ba90b22f0055034".to_string());
+        let github_client_id = ClientId::new("x".to_string());
+        let github_client_secret = ClientSecret::new("x".to_string());
         let auth_url = AuthUrl::new("https://github.com/login/oauth/authorize".to_string()).expect("failed to get github auth");
         let token_url = TokenUrl::new("https://github.com/login/oauth/access_token".to_string()).expect("failed to get github token");
 
