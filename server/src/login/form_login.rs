@@ -17,7 +17,7 @@ pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, sessio
        if verify(&user.password, &found_user.password).expect("Password could not be verified") {
            let user_id = found_user.id.map(|id| id.to_string());
            let is_admin = found_user.admin;
-
+            println!("user that logged in: {:?}",found_user);
            // Set user_id and is_admin in the session
            session.insert("user_id", user_id.clone()).expect("Could not insert session");
            session.insert("is_admin", is_admin).expect("Could not insert admin status");
