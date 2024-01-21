@@ -1,0 +1,12 @@
+article{
+    display: flex;
+    justify-content: center;
+}
+article div {
+    display: flex;
+    flex-direction: column;
+}
+
+  p {
+      white-space: pre-line;
+  }

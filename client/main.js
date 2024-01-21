@@ -1,6 +1,7 @@
 import {registerUser, login, logout} from "./user.js"
-import {displayPosts, postContent, searchPosts} from "./posts.js";
-// import {githubLogin} from "./oauth";
+import { displayAllPosts} from "./posts.js";
+import {postContent} from "./postMethods.js";
+import { searchPosts } from "./search.js";
 
 document.getElementById("sign-in").addEventListener("click", async (e) => {
     e.preventDefault();
@@ -38,4 +39,4 @@ function getCurrentDate(){
     return new Date().toISOString();
 }
 
-await displayPosts();
+await displayAllPosts();

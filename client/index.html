@@ -5,30 +5,43 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>NotFacebook</h1></header>
-
-
-<h3>Register</h3>
+<header>
+    <h1>NotFacebook</h1>
+    <div id="user">
+        
+    </div>
+</header>
+<label for="search">Search for a post</label>
+<input type="text" id="search" placeholder="Search for posts">
+<article>
+    <ul id="search-list"></ul>
+</article>
+<div id="forms-container">
+    <div id="forms">
+<h3 id="register">Register</h3>
 <form method="post">
     <input name="email" type="email" placeholder="email">
     <input name="password" type="password" placeholder="password">
     <button id="sign-up">Sign up</button>
 </form>
 
-<aside>
-    <h3>Login</h3>
+    <h3 id="login">Login</h3>
     <form method="post">
         <input id="#login-email" name="email" type="email" placeholder="email">
         <input id="#login-pass" name="password" type="password" placeholder="password">
         <button id="sign-in">Sign in</button>
+        <button id="sign-out">Sign out</button>
     </form>
-    <button id="sign-out">Sign out</button>
+    
     <div class="login">
-        <a href="http://127.0.0.1:8083">Login With GitHub</a>
+        <a href="http://127.0.0.1:8083/login">Login With GitHub</a>
         <a href="http://127.0.0.1:8083/logout">Logout With GitHub</a>
     </div>
-</aside>
+    </div>
+</div>
 
+<div id="post-container">
+    <div id="posts">
 <h3>Posts</h3>
 <i>Post something</i>
 <form method="post">
@@ -36,18 +49,17 @@
     <textarea id="content"></textarea>
     <button id="post-content">Post</button>
 </form>
+</div>
+</div>
 
 
-<input type="text" id="search" placeholder="Search">
-<article>
-    <ul id="search-list"></ul>
-</article>
 
-
+<div id="post-container">
 <article>
     <ul id="postsList"></ul>
 </article>
-
+</div>
+</div>
 <script src="main.js" type="module"></script>
 </body>
 </html>

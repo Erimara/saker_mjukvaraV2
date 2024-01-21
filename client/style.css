@@ -1,5 +1,5 @@
 html{
-    background: antiquewhite;
+    background: rgb(185, 224, 253);
 }
 
 a{
@@ -9,4 +9,74 @@ a{
 button{
     width: fit-content;
     height: fit-content;
+}
+.delete-post{
+    margin: 1em;
+}
+header{
+    background-color: rgb(94, 199, 255);
+    border-radius: 5%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 2em;
+}
+
+#forms-container {
+    display: flex;
+    justify-content: left;
+}
+
+#forms {
+    display: flex;
+    flex-direction: column;
+}
+#forms form {
+    display: flex;
+    flex-direction: column;
+}
+
+#post-container {
+    display: flex;
+    justify-content: center;
+}
+
+.post-container {
+    margin: 1em;
+    border-radius: 10%;
+    background-color: rgb(94, 199, 255);
+}
+.post-container h4:hover {
+    cursor: pointer;
+}
+.post-container h4, p{
+    text-align: center;
+}
+.post-container i {
+    margin-left: 1em;
+}
+
+
+#specific-post{
+    text-align: center;
+}
+#specific-post-header{
+    display: flex;
+    justify-content: left;
+}
+
+
+#posts {
+    display: flex;
+    flex-direction: column;
+}
+
+#posts form {
+    display: flex;
+    flex-direction: column;
+}
+#postsList{
+    display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding-top: 2em;
 }
