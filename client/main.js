@@ -25,7 +25,6 @@ document.getElementById("post-content").addEventListener("click", async (e) =>{
     const date = getCurrentDate();
     const title = document.getElementById("title").value;
     const content = document.getElementById("content").value;
-    console.log(title + content);
     await postContent(title,content,date)
 })
 

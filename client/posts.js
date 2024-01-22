@@ -4,6 +4,7 @@ import {
   getPostById,
 } from "./postMethods.js";
 
+
 function displayPostById(post) {
   const specificPost = document.getElementById("specific-post");
 
@@ -45,10 +46,10 @@ export async function displayAllPosts() {
 
 function appendText(button, h4, p, i, postContainer, post) {
   button.setAttribute("class", "delete-post");
-  h4.textContent = post.title;
-  p.textContent = post.content;
-  i.textContent = `Posted at: ${post.date}`;
-  button.textContent = "delete";
+  h4.innerText = post.title;
+  p.innerText = post.content;
+  i.innerText = `Posted at: ${post.date}`;
+  button.innerText = "delete";
 
   postContainer.appendChild(h4);
   postContainer.appendChild(p);
@@ -62,8 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (postId) {
     const post = await getPostById(postId);
     displayPostById(post);
-  } else {
-    console.error("Post ID not found in query parameters.");
   }
 });
 

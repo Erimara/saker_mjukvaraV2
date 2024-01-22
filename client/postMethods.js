@@ -1,12 +1,30 @@
+
+function purifyTitleAndContent(title, content){
+  const sanitizedTitle = DOMPurify.sanitize(title)
+  const sanitizedContent = DOMPurify.sanitize(content);
+  if(sanitizedTitle === "" || sanitizedContent === ""){
+    document.getElementById("post-error").innerText =
+      "Invalid input, please try again";
+    return null;
+  }
+  return {sanitizedTitle, sanitizedContent};
+}
+
 export async function postContent(title, content, date) {
+  const sanitizedData = purifyTitleAndContent(title,content);
+  if (!sanitizedData){
+    return;
+  }
   try {
     const response = await fetch("http://127.0.0.1:8081/create_post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content, date }),
-      credentials: "include", //This might be unsafe :))
+      body: JSON.stringify({ 
+        title:sanitizedData.sanitizedTitle,
+        content:sanitizedData.sanitizedContent,
+        date }),
+      credentials: "include",
     });
-
     await response.json();
   } catch (error) {
     console.log("Error at posting content", error);
@@ -24,12 +42,6 @@ export async function deletePost(post_id) {
         credentials: "include", //This might be unsafe :))
       }
     );
-
-    if (response.ok) {
-      console.log(`Post with ID ${post_id} deleted successfully`);
-    } else {
-      console.error(`Failed to delete post with ID ${post_id}`);
-    }
   } catch (error) {
     console.error("Error at deleting post:", error);
   }
@@ -45,7 +57,7 @@ export async function getPostById(post_id) {
       const post = await response.json();
       return post;
     } else {
-      console.error(`Failed to get post with ID ${post_id}`);
+      console.error(`Failed to get post with ID`);
     }
   } catch (error) {
     console.error("Error at getting post:", error);

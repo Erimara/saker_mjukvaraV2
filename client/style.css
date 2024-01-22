@@ -10,6 +10,9 @@ button{
     width: fit-content;
     height: fit-content;
 }
+#sign-out{
+    display: none;
+}
 .delete-post{
     margin: 1em;
 }
@@ -79,4 +82,10 @@ header{
         flex-wrap: wrap;
         justify-content: space-between;
         padding-top: 2em;
+}
+
+#footer{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(94, 199, 255);
 }
