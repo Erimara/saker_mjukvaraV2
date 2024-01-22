@@ -50,8 +50,15 @@ export async function registerUser(email, password) {
     console.error("Error during registration:", error);
   }
 }
-
-
+export function sendData(e) {
+       e.preventDefault();
+       grecaptcha.enterprise.ready(async () => {
+         const token = await grecaptcha.enterprise.execute(
+           "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy",
+           { action: "LOGIN" }
+         );
+       });
+     }
 export async function login(email, password) {
     const purifiedData = purifiedCredentials(email, password, "login");
     if (!purifiedData) {
