@@ -10,6 +10,7 @@ mod models;
 mod http_methods;
 mod login;
 mod database;
+mod utils;
 
 #[actix_web::main]
 async fn main() {
@@ -19,7 +20,6 @@ async fn main() {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
-
             .wrap(
                 Cors::default()
                     .allowed_origin("http://127.0.0.1:5500")
@@ -42,9 +42,9 @@ fn session_middleware() -> SessionMiddleware<CookieSessionStore> {
         CookieSessionStore::default(), Key::from(&[0; 64])
     )
         .cookie_name(String::from("very-secure-cookie"))
-        .cookie_secure(false)
+        .cookie_secure(true)
         .cookie_http_only(false)
-        .cookie_same_site(SameSite::Lax)
+        .cookie_same_site(SameSite::Strict)
         .build()
 }
 

@@ -2,6 +2,7 @@ use actix_web::{HttpResponse, web};
 use bcrypt::{DEFAULT_COST, hash};
 use mongodb::Database;
 use crate::models::user::User;
+use crate::utils::validate::email_validation;
 pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -> HttpResponse {
     let db = data.get_ref();
     let collection = db.collection::<User>("users");
@@ -13,10 +14,16 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
             return HttpResponse::InternalServerError().finish();
         }
     };
-
+    let is_valid_email = match email_validation(user.email.clone()){
+        Ok(email) => email,
+        Err(e) => {
+            println!("Non valid email: {:?}", e);
+            return HttpResponse::InternalServerError().finish();
+        }
+    };
     let hashed_user = User{
         id: None,
-        email: user.email.clone(),
+        email:is_valid_email,
         password: hash_password,
         admin:false
     };
