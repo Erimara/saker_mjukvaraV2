@@ -1,18 +1,17 @@
 #[macro_use]
 extern crate serde_derive;
+
+use actix_cors::Cors;
 use actix_session::{Session, SessionMiddleware};
 use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_session::storage::CookieSessionStore;
 use oauth2::basic::BasicClient;
-use oauth2::{
-    AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, RedirectUrl,
-    TokenUrl,Scope
-};
+use oauth2::{AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, RedirectUrl, TokenUrl, Scope};
 
 use actix_web::cookie::{Cookie, Key, SameSite, time};
 use actix_web::cookie::time::Duration;
-use actix_web::http::header::LOCATION;
-
+use actix_web::http::header;
+use serde_json::json;
 
 
 #[actix_web::main]
@@ -38,6 +37,13 @@ async fn main() {
             .app_data(web::Data::new(AppState { oauth: client }))
             .wrap(cookie())
             .configure(configure_github_auth_routes)
+            .wrap(
+                Cors::default()
+                    .allowed_origin("http://127.0.0.1:5500")
+                    .allowed_methods(vec!["GET"])
+                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT, header::CONTENT_TYPE])
+                    .supports_credentials(),
+            )
 
     })
         .bind("127.0.0.1:8083")
@@ -60,39 +66,21 @@ fn cookie() -> SessionMiddleware<CookieSessionStore> {
 struct AppState {
     oauth: BasicClient,
 }
-async fn index(session: Session) -> HttpResponse {
-    let link = if let Some(_login) = session.get::<bool>("login").unwrap() {
-        "logout"
-    } else {
-        "login"
-    };
-
-    let html = format!(
-        r#"<html>
-        <head><title>OAuth2 Test</title></head>
-        <body>
-            <a href="/{}">{}</a>
-        </body>
-    </html>"#,
-        link, link
-    );
-
-    HttpResponse::Ok().body(html)
-}
 
 async fn login(data: web::Data<AppState>) -> HttpResponse {
     let (pkce_code_challenge, _pkce_code_verifier) = PkceCodeChallenge::new_random_sha256();
 
-    let (authorize_url, _csrf_state) = &data
+    let (authorize_url, csrf_state) = &data
         .oauth
         .authorize_url(CsrfToken::new_random)
         .add_scope(Scope::new("user".to_string()))
         .set_pkce_challenge(pkce_code_challenge)
         .url();
 
-    HttpResponse::Found()
-        .header(LOCATION, authorize_url.to_string())
-        .finish()
+    HttpResponse::Ok().json(json!({
+        "redirect_url": authorize_url.to_string(),
+        "csrf_state": csrf_state.secret(),
+    }))
 }
 
 async fn logout(session: Session) -> HttpResponse {
@@ -103,8 +91,8 @@ async fn logout(session: Session) -> HttpResponse {
         .finish();
     let html = html_redirect();
     let response = HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
         .cookie(expired_cookie)
+        .insert_header(header::ContentType(mime::TEXT_HTML))
         .body(html);
     response
 }
@@ -116,11 +104,10 @@ pub struct AuthRequest {
     #[serde(default)]
     scope: String,
 }
-
 async fn auth(
     session: Session,
     data: web::Data<AppState>,
-    params: web::Query<AuthRequest>,
+    params: web::Query<AuthRequest>
 ) -> HttpResponse {
     let code = AuthorizationCode::new(params.code.clone());
     let state = CsrfToken::new(params.state.clone());
@@ -129,24 +116,22 @@ async fn auth(
     data.oauth.exchange_code(code);
     session.insert("login", true).unwrap();
 
+
+
     let cookie_value = state.secret();
     let cookie = Cookie::build("oauth", cookie_value)
         .http_only(true)
         .max_age(Duration::new(3000, 0))
         .finish();
     let html = html_redirect();
+
     let response = HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .cookie(cookie)
         .body(html);
-
     response
 }
 pub fn configure_github_auth_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::resource("/")
-            .route(web::get().to(index))
-    );
     cfg.service(
         web::resource("/login")
             .route(web::get().to(login))
@@ -161,20 +146,20 @@ pub fn configure_github_auth_routes(cfg: &mut web::ServiceConfig) {
     );
 }
 fn html_redirect() -> String {
-    let link = "127.0.0.1:5500";
+    let link = "http://127.0.0.1:5500/client/html/index.html";
     let html = format!(
         r#"
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <meta http-equiv="refresh" content="0;url=http://127.0.0.1:5500">
+            <meta http-equiv="refresh" content="0;url={}">
             <title>Redirecting...</title>
         </head>
         <body>
             <p>If you are not redirected,<a href="/{}"> Click here{}</a>
         </body>
         </html>
-    "#, link, link);
+    "#, link, link, link);
     html
 }
