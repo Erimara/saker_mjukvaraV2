@@ -1,30 +1,3 @@
-
-function emailRegexCheck(email) {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-  const checkEmail = emailRegex.test(email);
-  console.log(email);
-  if (checkEmail) {
-    return email;
-  } else return null;
-}
-function purifiedCredentials(email, password, option) {
-const isValidEmail = emailRegexCheck(email);
-  const sanitizedEmail = DOMPurify.sanitize(emailRegexCheck(email));
-  const sanitizedPassword = DOMPurify.sanitize(password)
-  if (!isValidEmail || sanitizedEmail === "" || sanitizedPassword === ""){
-    if (option == "register"){
-        document.getElementById("register").innerText =
-          "Ineligible email or password.\nEmail may include, letters, digits, dots, underscores, or hyphens\n example@domain.io,";
-        return null;
-    } else if (option == "login"){
-        document.getElementById("login").innerText =
-          "Ineligible email or password"
-        return null;
-    }
-    
-  }
-  return {sanitizedEmail, sanitizedPassword};
-}
 export async function registerUser(email, password) {
     const purifiedData = purifiedCredentials(email, password, "register");
     if(!purifiedData){
@@ -50,7 +23,7 @@ export async function registerUser(email, password) {
     console.error("Error during registration:", error);
   }
 }
-export function sendData(e) {
+ export function sendLogin(e) {
        e.preventDefault();
        grecaptcha.enterprise.ready(async () => {
          const token = await grecaptcha.enterprise.execute(
@@ -59,6 +32,16 @@ export function sendData(e) {
          );
        });
      }
+      export function sendRegister(e) {
+        e.preventDefault();
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute(
+            "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy",
+            { action: "REGISTER" }
+          );
+        });
+      }
+
 export async function login(email, password) {
     const purifiedData = purifiedCredentials(email, password, "login");
     if (!purifiedData) {
@@ -85,7 +68,7 @@ export async function login(email, password) {
   }
 }
 
-function setLoggedInUser(result) {
+export function setLoggedInUser(result, option) {
   let user = document.getElementById("user");
   let h4 = document.createElement("h4");
   h4.innerText = result;
@@ -94,6 +77,14 @@ function setLoggedInUser(result) {
   localStorage.setItem("loggedInUser", result);
   if (!result) {
     document.getElementById("login").innerText = "Wrong username or password";
+  }
+  if (option === "github"){
+    let github = "Logged in with github";
+    let user = document.getElementById("user");
+    let h4 = document.createElement("h4");
+    h4.innerText = github;
+    user.appendChild(h4);
+    localStorage.setItem("loggedInUser", github);
   }
 }
 window.onload = function () {
@@ -121,4 +112,30 @@ export async function logout() {
   } catch (error) {
     console.error("Error during logout:", error);
   }
+}
+
+function emailRegexCheck(email) {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+  const checkEmail = emailRegex.test(email);
+  if (checkEmail) {
+    return email;
+  } else return null;
+}
+
+function purifiedCredentials(email, password, option) {
+  const isValidEmail = emailRegexCheck(email);
+  const sanitizedEmail = DOMPurify.sanitize(emailRegexCheck(email));
+  const sanitizedPassword = DOMPurify.sanitize(password);
+  if (!isValidEmail || sanitizedEmail === "" || sanitizedPassword === "") {
+    if (option == "register") {
+      document.getElementById("register").innerText =
+        "Ineligible email or password.\nEmail may include, letters, digits, dots, underscores, or hyphens\n example@domain.io,";
+      return null;
+    } else if (option == "login") {
+      document.getElementById("login").innerText =
+        "Ineligible email or password";
+      return null;
+    }
+  }
+  return { sanitizedEmail, sanitizedPassword };
 }

@@ -1,15 +1,4 @@
 
-function purifyTitleAndContent(title, content){
-  const sanitizedTitle = DOMPurify.sanitize(title)
-  const sanitizedContent = DOMPurify.sanitize(content);
-  if(sanitizedTitle === "" || sanitizedContent === ""){
-    document.getElementById("post-error").innerText =
-      "Invalid input, please try again";
-    return null;
-  }
-  return {sanitizedTitle, sanitizedContent};
-}
-
 export async function postContent(title, content, date) {
   const sanitizedData = purifyTitleAndContent(title,content);
   if (!sanitizedData){
@@ -63,3 +52,25 @@ export async function getPostById(post_id) {
     console.error("Error at getting post:", error);
   }
 }
+
+
+function purifyTitleAndContent(title, content) {
+  const sanitizedTitle = DOMPurify.sanitize(title);
+  const sanitizedContent = DOMPurify.sanitize(content);
+  if (sanitizedTitle === "" || sanitizedContent === "") {
+    document.getElementById("post-error").innerText =
+      "Invalid input, please try again";
+    return null;
+  }
+  return { sanitizedTitle, sanitizedContent };
+}
+
+   export function sendPost(e) {
+     e.preventDefault();
+     grecaptcha.enterprise.ready(async () => {
+       const token = await grecaptcha.enterprise.execute(
+         "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy",
+         { action: "POST_CONTENT" }
+       );
+     });
+   }
