@@ -1,11 +1,11 @@
 use actix_cors::Cors;
 use actix_session::SessionMiddleware;
 use actix_session::storage::CookieSessionStore;
-use actix_web::{web, App, HttpServer};
 use actix_web::cookie::{Key, SameSite};
 use actix_web::http::header;
 use crate::database::db::connection;
 use crate::http_methods::routes;
+use actix_web::{web, App, HttpServer};
 mod models;
 mod http_methods;
 mod login;
@@ -16,7 +16,6 @@ mod utils;
 async fn main() {
     let address = "127.0.0.1:8081";
     let database = connection().await;
-
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(database.clone()))
@@ -29,6 +28,7 @@ async fn main() {
                     .supports_credentials()
             )
             .wrap(session_middleware())
+
             .configure(routes::configure_routes)
     })
         .bind(address)
