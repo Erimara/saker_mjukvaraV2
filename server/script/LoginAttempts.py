@@ -8,7 +8,7 @@ def extract_ip_addresses(file_path):
     
     return ip_addresses_list
 
-file_path = "/Users/erimara/Documents/MyCode/säker-mjukvara/projekt/server/logs.txt"
+file_path = "[path to your logs.txt file]"
 result = extract_ip_addresses(file_path)
 sub_result = [ip[:-6] for ip in result]
 counter = len(sub_result)
