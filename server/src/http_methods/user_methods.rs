@@ -26,7 +26,7 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
     let does_email_exist = doc! { "email": &is_valid_email };
     if let Ok(Some(_email_exists)) = collection.find_one(does_email_exist.clone(), None).await {
         return HttpResponse::InternalServerError().finish();
-    } else if let Err(e) = collection.find_one(does_email_exist, None).await {
+    } else if let Err(_e) = collection.find_one(does_email_exist, None).await {
         return HttpResponse::InternalServerError().finish();
     }
 

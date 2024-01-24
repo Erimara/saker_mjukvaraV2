@@ -11,18 +11,15 @@ use crate::models::user::User;
 pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, session: Session, req:HttpRequest) -> HttpResponse{
     let db = data.get_ref();
     let collection = db.collection::<User>("users");
-
     if let Some(found_user) = collection.find_one(doc! {"email": &user.email}, None)
         .await.expect("Could not find user in database") {
         if verify(&user.password, &found_user.password).expect("Password could not be verified") {
             let user_id = found_user.id.map(|id| id.to_string());
             let is_admin = found_user.admin;
             println!("user that logged in: {:?}",found_user);
-            collect_data(req).await;
             session.insert("user_id", user_id.clone()).expect("Could not insert session");
             session.insert("is_admin", is_admin).expect("Could not insert admin status");
             let user_session = session.get::<String>("user_id").unwrap_or_default();
-
 
             let cookie_value = user_session.unwrap_or_default();
             let cookie = Cookie::build("user_id", cookie_value)
@@ -39,6 +36,7 @@ pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, sessio
                 .json(found_user.email)
 
         } else {
+            collect_data(req).await;
             println!("invalid password");
             HttpResponse::InternalServerError().finish()
         }
