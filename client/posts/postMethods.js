@@ -14,7 +14,10 @@ export async function postContent(title, content, date) {
         date }),
       credentials: "include",
     });
-    await response.json();
+     await response.json();
+    if (response.ok){
+      document.getElementById("post-something").innerText = "Posted!"
+    }
   } catch (error) {
     console.log("Error at posting content", error);
   }
@@ -36,8 +39,17 @@ export async function deletePost(post_id) {
   }
 }
 export async function getAllPosts() {
-  const response = await fetch("http://127.0.0.1:8081/posts");
-  return await response.json();
+    try {
+      const response = await fetch("http://127.0.0.1:8081/posts");
+      if (response.ok) {
+        const post = await response.json();
+        return post;
+      } else {
+        console.error(`Failed to get post`);
+      }
+    } catch (error) {
+      console.error("Error at getting post:", error);
+    }
 }
 export async function getPostById(post_id) {
   try {

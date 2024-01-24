@@ -74,7 +74,8 @@ export function setLoggedInUser(result, option) {
   h4.innerText = result;
   user.appendChild(h4);
   document.getElementById("login").innerText = "Login successfull";
-  localStorage.setItem("loggedInUser", result);
+  const username = result;
+  localStorage.setItem("loggedInUser", username);
   if (!result) {
     document.getElementById("login").innerText = "Wrong username or password";
   }
@@ -103,11 +104,10 @@ export async function logout() {
     });
 
     if (response.ok) {
-      const result = await response.json();
       document.cookie = "user_id" + "=; HttpOnly; Max-Age=0";
-      localStorage.clear("loggedInUser");
+      localStorage.removeItem("loggedInUser");
     } else {
-      console.error("Error during logout");
+      console.error("Error during logout", res);
     }
   } catch (error) {
     console.error("Error during logout:", error);

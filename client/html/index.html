@@ -9,11 +9,25 @@
 </head>
 <body>
 <header>
-    <h1>NotFacebook</h1>
+    <h1>Anonymous</h1>
     <div id="user">
         
     </div>
 </header>
+
+<div id="popup-wrapper">
+    <div id="popup">
+        <h4></h4>
+        <p>This site uses strictly necessary first and third party cookies for functionality and to ensure your safety.</p>
+        <p>By using this website you consent to these cookies being stored in your browser</p>
+        <p>By using this website you also agree to having read and understood the terms of our Integrity Policy</p>
+        <button id="consent-button">Got it brother</button>
+        <a href="Integrity.html">
+            <p>Read more</p>
+        </a>
+    </div>
+</div>
+
 <label for="search">Search for a post</label>
 <input type="text" id="search" placeholder="Search for posts">
 <article>
@@ -46,7 +60,7 @@
 <div id="post-container">
     <div id="posts">
 <h3>Posts</h3>
-<i>Post something</i>
+<i id="post-something">Post something</i>
 <form method="post">
     <label id="post-error"></label>
     <input id="title" name="title" type="text" placeholder="write a cool title">
@@ -64,7 +78,10 @@
 </article>
 </div>
 </div>
-<footer id="footer"><a href="info.html">Found a bug or a vulnerability?</a></footer>
+<footer id="footer">
+    <a href="vulnerability.html">Found a bug or a vulnerability?</a>
+    <a href="Integrity.html">Policies</a>
+</footer>
 <script src="../main.js" type="module"></script>
 </body>
 </html>

@@ -70,6 +70,6 @@ function getPostIdFromQueryParams() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("post_id");
 }
-function redirectToPostPage(postId) {
+export function redirectToPostPage(postId) {
   window.location.href = `post.html?post_id=${postId}`;
 }

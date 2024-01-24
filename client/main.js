@@ -45,9 +45,21 @@ document.getElementById("search").addEventListener("keyup", async (e) =>{
     e.preventDefault();
     searchPosts();
 })
+document.getElementById("consent-button").addEventListener("click", async (e) => {
+  e.preventDefault();
+  document.getElementById("popup-wrapper").style.display = "none"
+  localStorage.setItem("consent_to_cookies", "true")
+});
 
+function loadPopup(){
+    const consent = localStorage.getItem("consent_to_cookies");
+    if(consent){
+        document.getElementById("popup-wrapper").style.display = "none";
+    }
+}
 function getCurrentDate(){
     return new Date().toISOString();
 }
 
 await displayAllPosts();
+loadPopup();

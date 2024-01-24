@@ -86,6 +86,29 @@ header{
 
 #footer{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     background-color: rgb(94, 199, 255);
+}
+
+#popup-wrapper {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px 25px 22px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+#popup {
+    text-align: center;
+    background: #fff;
+    opacity: 0.9;
+}
+#search-wrapper{
+    display: flex;
+    justify-content: center;
+}
+#search{
+    margin: 1em;
 }
