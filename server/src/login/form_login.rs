@@ -6,6 +6,7 @@ use actix_web::http::header;
 use bcrypt::verify;
 use mongodb::bson::doc;
 use mongodb::Database;
+use uuid::Uuid;
 use crate::login::check_user_auth::{collect_data};
 use crate::models::user::User;
 pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, session: Session, req:HttpRequest) -> HttpResponse{
@@ -17,7 +18,8 @@ pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, sessio
             let user_id = found_user.id.map(|id| id.to_string());
             let is_admin = found_user.admin;
             println!("user that logged in: {:?}",found_user);
-            session.insert("user_id", user_id.clone()).expect("Could not insert session");
+            let id = Uuid::new_v4();
+            session.insert("user_id", id).expect("Could not insert session");
             session.insert("is_admin", is_admin).expect("Could not insert admin status");
             let user_session = session.get::<String>("user_id").unwrap_or_default();
 

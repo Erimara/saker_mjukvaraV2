@@ -23,7 +23,7 @@ export async function githubLogout() {
    if (response.ok) {
     window.location.href = response.url;
      document.cookie = "oauth" + "=; HttpOnly; Max-Age=0";
-     localStorage.clear("loggedInUser");
+     localStorage.removeItem("loggedInUser");
    } else {
      console.error("Failed to logout with github");
    }

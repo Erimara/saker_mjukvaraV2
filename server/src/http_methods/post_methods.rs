@@ -36,6 +36,7 @@ pub(crate) async fn create_post(data: web::Data<Database>, user_post: web::Json<
 pub(crate) async fn get_all_posts(data: web::Data<Database>) -> HttpResponse {
     let db = data.get_ref();
     let collection = db.collection::<Post>("posts");
+
     match collection.find(None, None).await {
         Ok(cursor) => {
             let posts: Vec<Post> = cursor.try_collect().await.unwrap_or_else(|e| {
