@@ -23,20 +23,20 @@ export async function registerUser(email, password) {
     console.error("Error during registration:", error);
   }
 }
- export function sendLogin(e) {
-       e.preventDefault();
-       grecaptcha.enterprise.ready(async () => {
-         const token = await grecaptcha.enterprise.execute(
-           "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy",
-           { action: "LOGIN" }
-         );
-       });
-     }
-      export function sendRegister(e) {
+ export function sendLoginGoogleData(e) {
+   e.preventDefault();
+   grecaptcha.enterprise.ready(async () => {
+     const token = await grecaptcha.enterprise.execute(
+       "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy", //OBS: Might need to change to your own recaptcha token
+       { action: "LOGIN" }
+     );
+   });
+ }
+      export function sendRegisterGoogleData(e) {
         e.preventDefault();
         grecaptcha.enterprise.ready(async () => {
           const token = await grecaptcha.enterprise.execute(
-            "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy",
+            "6LeFqVgpAAAAANzbXhYcFL9_9bKs6L9VAY0p6aVy", //OBS: Might need to change to your own recaptcha token
             { action: "REGISTER" }
           );
         });
@@ -127,11 +127,11 @@ function purifiedCredentials(email, password, option) {
   const sanitizedEmail = DOMPurify.sanitize(emailRegexCheck(email));
   const sanitizedPassword = DOMPurify.sanitize(password);
   if (!isValidEmail || sanitizedEmail === "" || sanitizedPassword === "") {
-    if (option == "register") {
+    if (option === "register") {
       document.getElementById("register").innerText =
         "Ineligible email or password.\nEmail may include, letters, digits, dots, underscores, or hyphens\n example@domain.io,";
       return null;
-    } else if (option == "login") {
+    } else if (option === "login") {
       document.getElementById("login").innerText =
         "Ineligible email or password";
       return null;

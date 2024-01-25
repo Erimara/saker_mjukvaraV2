@@ -48,5 +48,4 @@ pub(crate) async fn register(data: web::Data<Database>, user: web::Json<User>) -
             HttpResponse::InternalServerError().finish()
         }
     }
-
 }

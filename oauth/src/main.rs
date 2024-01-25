@@ -17,8 +17,8 @@ use serde_json::json;
 #[actix_web::main]
 async fn main() {
     HttpServer::new(|| {
-        let github_client_id = ClientId::new("x".to_string());
-        let github_client_secret = ClientSecret::new("x".to_string());
+        let github_client_id = ClientId::new("[your client id here]".to_string());
+        let github_client_secret = ClientSecret::new("[your secret here]".to_string());
         let auth_url = AuthUrl::new("https://github.com/login/oauth/authorize".to_string()).expect("failed to get github auth");
         let token_url = TokenUrl::new("https://github.com/login/oauth/access_token".to_string()).expect("failed to get github token");
 

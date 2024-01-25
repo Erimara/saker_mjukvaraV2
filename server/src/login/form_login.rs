@@ -7,7 +7,7 @@ use bcrypt::verify;
 use mongodb::bson::doc;
 use mongodb::Database;
 use uuid::Uuid;
-use crate::login::check_user_auth::{collect_data};
+use crate::utils::validate::collect_data;
 use crate::models::user::User;
 pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, session: Session, req:HttpRequest) -> HttpResponse{
     let db = data.get_ref();
@@ -44,6 +44,7 @@ pub async fn form_login(data: web::Data<Database>, user: web::Json<User>, sessio
         }
     } else {
         println!("user not found");
+        collect_data(req).await;
         HttpResponse::NotFound().finish()
     }
 }

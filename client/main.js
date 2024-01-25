@@ -1,4 +1,10 @@
-import {registerUser, login, logout, sendLogin,sendRegister } from "./user/user.js"
+import {
+  registerUser,
+  login,
+  logout,
+  sendLoginGoogleData,
+  sendRegisterGoogleData,
+} from "./user/user.js";
 import { displayAllPosts,} from "./posts/posts.js";
 import {postContent, sendPost} from "./posts/postMethods.js";
 import { searchPosts } from "./posts/search.js";
@@ -9,7 +15,7 @@ document.getElementById("sign-in")
     e.preventDefault();
     const email = document.getElementById("#login-email").value;
     const password = document.getElementById("#login-pass").value;
-    sendLogin(e);
+    sendLoginGoogleData(e);
     await login(email,password);
 })
 document.getElementById("github-login")
@@ -27,7 +33,7 @@ document.getElementById("sign-up")
     e.preventDefault();
     const email = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
-    sendRegister(e);
+    sendRegisterGoogleData(e);
     await registerUser(email,password);
 })
 document.getElementById("sign-out")
